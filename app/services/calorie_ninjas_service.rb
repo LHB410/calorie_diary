@@ -1,9 +1,9 @@
 class CalorieNinjasService
   include HTTParty
-  base_uri "https://api.calorieninjas.com/v1"
+  base_uri "https://api.api-ninjas.com/v1"
 
   def initialize
-    @api_key = ENV["CALORIE_NINJAS_API_KEY"]
+    @api_key = ENV.fetch["CALORIE_NINJAS_API_KEY"]
   end
 
   def fetch_food_data(food_name)

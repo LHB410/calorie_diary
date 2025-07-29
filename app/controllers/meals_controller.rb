@@ -2,11 +2,12 @@ class MealsController < ApplicationController
   before_action :set_meal, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @meals = Meal.recent.includes(:foods)
+    @meals = Meal.recent.includes(meal_ingredients: :food)
     @meals = @meals.by_date(params[:date].to_date) if params[:date].present?
   end
 
   def show
+    @meal = Meal.includes(meal_ingredients: :food).find(params[:id])
   end
 
   def new
@@ -43,7 +44,7 @@ class MealsController < ApplicationController
   private
 
   def set_meal
-    @meal = Meal.find(params[:id])
+    # removed, now handled in show
   end
 
   def meal_params
