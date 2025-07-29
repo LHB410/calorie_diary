@@ -1,0 +1,81 @@
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    color: $primary-color;
+  }
+
+  .date-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .current-date {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.meal-form-container {
+  background: $card-background;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ingredients-section {
+  margin-top: 2rem;
+
+  h3 {
+    margin-bottom: 1rem;
+    color: $primary-color;
+  }
+}
+
+.ingredient-row {
+  background: $background-color;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid $border-color;
+
+  .ingredient-fields {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+  }
+}
+
+.search-results {
+  position: relative;
+  margin-top: 0.5rem;
+
+  .search-success {
+    background: lighten($success-color, 40%);
+    color: darken($success-color, 20%);
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+
+  .search-error {
+    background: lighten($error-color, 40%);
+    color: darken($error-color, 20%);
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}

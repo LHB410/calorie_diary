@@ -1,0 +1,46 @@
+<div class="meals-index">
+  <div class="page-header">
+    <h1>All Meals</h1>
+    <%= link_to 'New Meal', new_meal_path, class: 'btn btn-primary' %>
+  </div>
+
+  <div class="meals-list">
+    <% @meals.group_by(&:date).each do |date, meals| %>
+      <div class="date-group">
+        <h2 class="date-header">
+          <%= link_to date.strftime('%B %d, %Y'), dashboard_index_path(date: date) %>
+          <span class="day-total"><%= meals.sum(&:total_calories).round %> calories</span>
+        </h2>
+
+        <div class="meals-grid">
+          <% meals.each do |meal| %>
+            <div class="meal-card">
+              <h4><%= link_to meal.name, meal_path(meal) %></h4>
+              <p class="meal-calories"><%= meal.total_calories.round %> calories</p>
+              <div class="meal-ingredients">
+                <% meal.meal_ingredients.includes(:food).limit(3).each do |ingredient| %>
+                  <span class="ingredient-tag">
+                    <%= ingredient.food.name %> (<%= ingredient.weight_g %>g)
+                  </span>
+                <% end %>
+                <% if meal.meal_ingredients.count > 3 %>
+                  <span class="ingredient-tag more">+<%= meal.meal_ingredients.count - 3 %> more</span>
+                <% end %>
+              </div>
+              <div class="meal-actions">
+                <%= link_to 'Edit', edit_meal_path(meal), class: 'btn btn-small btn-secondary' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @meals.empty? %>
+      <div class="empty-state">
+        <p>No meals recorded yet.</p>
+        <%= link_to 'Add your first meal', new_meal_path, class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

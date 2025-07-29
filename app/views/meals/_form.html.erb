@@ -1,0 +1,111 @@
+<%= form_with(model: meal, local: true, data: { controller: "meal-form" }) do |form| %>
+  <% if meal.errors.any? %>
+    <div class="alert alert-error">
+      <h4><%= pluralize(meal.errors.count, "error") %> prohibited this meal from being saved:</h4>
+      <ul>
+        <% meal.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :date %>
+    <%= form.date_field :date, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 3, class: "form-control" %>
+  </div>
+
+  <div class="ingredients-section">
+    <h3>Ingredients</h3>
+
+    <div data-meal-form-target="container" id="ingredients-container">
+      <%= form.fields_for :meal_ingredients do |ingredient_form| %>
+        <div data-ingredient-row class="ingredient-row">
+          <%= ingredient_form.hidden_field :id %>
+          <%= ingredient_form.hidden_field :_destroy %>
+
+          <div class="ingredient-fields" data-controller="food-search" data-food-search-url-value="<%= search_foods_path %>">
+            <div class="form-group">
+              <%= ingredient_form.label :food_name, "Food" %>
+              <input type="text"
+                     data-food-search-target="input"
+                     data-action="input->food-search#search"
+                     placeholder="Search for food..."
+                     value="<%= ingredient_form.object.food&.name %>"
+                     class="form-control">
+              <%= ingredient_form.hidden_field :food_id, data: { food_search_target: "hiddenField" } %>
+              <div data-food-search-target="results" class="search-results"></div>
+            </div>
+
+            <div class="form-group">
+              <%= ingredient_form.label :weight_g, "Weight (grams)" %>
+              <%= ingredient_form.number_field :weight_g, step: 0.1, class: "form-control" %>
+            </div>
+
+            <button type="button"
+                    data-action="click->meal-form#removeIngredient"
+                    class="btn btn-danger btn-small">
+              Remove
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <button type="button"
+            data-action="click->meal-form#addIngredient"
+            class="btn btn-secondary">
+      Add Ingredient
+    </button>
+
+    <!-- Template for new ingredients -->
+    <template data-meal-form-target="template">
+      <div data-ingredient-row class="ingredient-row">
+        <div class="ingredient-fields" data-controller="food-search" data-food-search-url-value="<%= search_foods_path %>">
+          <div class="form-group">
+            <label>Food</label>
+            <input type="text"
+                   name="meal[meal_ingredients_attributes][NEW_RECORD][food_name]"
+                   data-food-search-target="input"
+                   data-action="input->food-search#search"
+                   placeholder="Search for food..."
+                   class="form-control">
+            <input type="hidden"
+                   name="meal[meal_ingredients_attributes][NEW_RECORD][food_id]"
+                   data-food-search-target="hiddenField">
+            <div data-food-search-target="results" class="search-results"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Weight (grams)</label>
+            <input type="number"
+                   name="meal[meal_ingredients_attributes][NEW_RECORD][weight_g]"
+                   step="0.1"
+                   class="form-control">
+          </div>
+
+          <button type="button"
+                  data-action="click->meal-form#removeIngredient"
+                  class="btn btn-danger btn-small">
+            Remove
+          </button>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to 'Cancel', meals_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

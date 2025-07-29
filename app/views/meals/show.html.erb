@@ -1,0 +1,45 @@
+<div class="meal-detail">
+  <div class="meal-header">
+    <h1><%= @meal.name %></h1>
+    <div class="meal-meta">
+      <span class="meal-date"><%= @meal.date.strftime('%B %d, %Y') %></span>
+      <span class="meal-calories"><%= @meal.total_calories.round %> calories</span>
+    </div>
+  </div>
+
+  <% if @meal.notes.present? %>
+    <div class="meal-notes">
+      <h3>Notes</h3>
+      <p><%= simple_format(@meal.notes) %></p>
+    </div>
+  <% end %>
+
+  <div class="meal-ingredients">
+    <h3>Ingredients</h3>
+    <div class="ingredients-table">
+      <% @meal.meal_ingredients.includes(:food).each do |ingredient| %>
+        <div class="ingredient-item">
+          <div class="ingredient-info">
+            <span class="ingredient-name"><%= ingredient.food.name %></span>
+            <span class="ingredient-weight"><%= ingredient.weight_g %>g</span>
+          </div>
+          <div class="ingredient-nutrition">
+            <span class="ingredient-calories"><%= ingredient.calories.round %> cal</span>
+            <div class="nutrition-details">
+              <span>P: <%= (ingredient.food.protein_g * ingredient.weight_g / 100).round(1) %>g</span>
+              <span>C: <%= (ingredient.food.carbs_g * ingredient.weight_g / 100).round(1) %>g</span>
+              <span>F: <%= (ingredient.food.fat_g * ingredient.weight_g / 100).round(1) %>g</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="meal-actions">
+    <%= link_to 'Edit', edit_meal_path(@meal), class: 'btn btn-primary' %>
+    <%= link_to 'Delete', meal_path(@meal), method: :delete,
+                data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+    <%= link_to 'Back to Dashboard', dashboard_index_path(date: @meal.date), class: 'btn btn-secondary' %>
+  </div>
+</div>
